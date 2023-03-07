@@ -1,0 +1,39 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+env/
+env27/
+venv/
+.python-version
+
+# Test results
+TestResults/
+test_failures.txt
+zone*export.txt
+
+# Settings
+client_secrets.json
+settings.yaml
+credentials.json
+
+# Config
+config.yaml
+
+# Mac desktop service store files
+.DS_Store
+
+.vscode/settings.json
+.vscode/.ropeproject/
+.vscode/tags
+.vscode/cSpell.json
+
+
+# Pytest
+.cache/
+.pytest_cache/
+
+# Misc
+run.sh
+keypass.backup.daily.plist

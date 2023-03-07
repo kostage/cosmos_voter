@@ -1,0 +1,158 @@
+{
+    "proposals": [
+      {
+        "proposal_id": "291",
+        "content": {
+          "@type": "/cosmwasm.wasm.v1.InstantiateContractProposal",
+          "title": "Deploy stOSMO-stATOM FIN Market",
+          "description": "This will open the stOSMO <> stATOM market on FIN",
+          "run_as": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+          "admin": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+          "code_id": "56",
+          "label": "FIN stOSMO-stATOM",
+          "msg": {
+            "owner": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+            "denoms": [
+              {
+                "native": "ibc/F97BDCE220CCB52139C73066E36C45EC7EDCEEF1DAFF891A34F4FBA195A2E6E8"
+              },
+              {
+                "native": "ibc/0306D6B66EAA2EDBB7EAD23C0EC9DDFC69BB43E80B398035E90FBCFEF3FD1A87"
+              }
+            ],
+            "price_precision": {
+              "decimal_places": 3
+            },
+            "decimal_delta": 0
+          },
+          "funds": [
+            {
+              "denom": "ukuji",
+              "amount": "1000000"
+            }
+          ]
+        },
+        "status": "PROPOSAL_STATUS_VOTING_PERIOD",
+        "final_tally_result": {
+          "yes": "0",
+          "abstain": "0",
+          "no": "0",
+          "no_with_veto": "0"
+        },
+        "submit_time": "2023-03-10T02:52:10.314503853Z",
+        "deposit_end_time": "2023-03-11T02:52:10.314503853Z",
+        "total_deposit": [
+          {
+            "denom": "ukuji",
+            "amount": "10000000000"
+          }
+        ],
+        "voting_start_time": "2023-03-10T02:53:36.746009382Z",
+        "voting_end_time": "2023-03-12T02:53:36.746009382Z"
+      },
+      {
+        "proposal_id": "294",
+        "content": {
+          "@type": "/cosmwasm.wasm.v1.InstantiateContractProposal",
+          "title": "Deploy DVPN-USK FIN Market",
+          "description": "This will open the DVPN <> USK market on FIN",
+          "run_as": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+          "admin": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+          "code_id": "56",
+          "label": "FIN DVPN-USK",
+          "msg": {
+            "owner": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+            "denoms": [
+              {
+                "native": "ibc/CF90BCBEDFF409F9187A0C3A69C1082D56908DC3F7FC342ED82455A504AD8AA9"
+              },
+              {
+                "native": "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk"
+              }
+            ],
+            "price_precision": {
+              "decimal_places": 6
+            },
+            "decimal_delta": 0
+          },
+          "funds": [
+            {
+              "denom": "ukuji",
+              "amount": "1000000"
+            }
+          ]
+        },
+        "status": "PROPOSAL_STATUS_VOTING_PERIOD",
+        "final_tally_result": {
+          "yes": "0",
+          "abstain": "0",
+          "no": "0",
+          "no_with_veto": "0"
+        },
+        "submit_time": "2023-03-10T10:46:31.879134962Z",
+        "deposit_end_time": "2023-03-11T10:46:31.879134962Z",
+        "total_deposit": [
+          {
+            "denom": "ukuji",
+            "amount": "10000000000"
+          }
+        ],
+        "voting_start_time": "2023-03-10T10:57:46.402865527Z",
+        "voting_end_time": "2023-03-12T10:57:46.402865527Z"
+      },
+      {
+        "proposal_id": "295",
+        "content": {
+          "@type": "/cosmwasm.wasm.v1.InstantiateContractProposal",
+          "title": "Deploy ampWHALE-WHALE FIN Market",
+          "description": "This will open the ampWHALE <> WHALE market on FIN",
+          "run_as": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+          "admin": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+          "code_id": "56",
+          "label": "FIN ampWHALE-WHALE",
+          "msg": {
+            "owner": "kujira1tsekaqv9vmem0zwskmf90gpf0twl6k57e8vdnq",
+            "denoms": [
+              {
+                "native": "ibc/034FBAB83B9B8AB35217DD59452C92EBC845ECD2E44AB17D260D9A2E7200AC79"
+              },
+              {
+                "native": "ibc/21F041CFE99994E0D027D0C5F72A9EB6224CBCAF5A6AD5DDB75F67A781D46C68"
+              }
+            ],
+            "price_precision": {
+              "decimal_places": 3
+            },
+            "decimal_delta": 0
+          },
+          "funds": [
+            {
+              "denom": "ukuji",
+              "amount": "1000000"
+            }
+          ]
+        },
+        "status": "PROPOSAL_STATUS_VOTING_PERIOD",
+        "final_tally_result": {
+          "yes": "0",
+          "abstain": "0",
+          "no": "0",
+          "no_with_veto": "0"
+        },
+        "submit_time": "2023-03-11T00:30:14.733920546Z",
+        "deposit_end_time": "2023-03-12T00:30:14.733920546Z",
+        "total_deposit": [
+          {
+            "denom": "ukuji",
+            "amount": "10001000000"
+          }
+        ],
+        "voting_start_time": "2023-03-11T00:32:20.830793641Z",
+        "voting_end_time": "2023-03-13T00:32:20.830793641Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
