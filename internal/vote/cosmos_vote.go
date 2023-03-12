@@ -17,6 +17,7 @@ var (
 	cosmosHasVotedCmdArgs  = "query gov vote %s %s -o json"
 	cosmosTallyCmdArgs     = "query gov tally %s -o json"
 	cosmosVoteCmdArgs      = "tx gov vote %s %s --from %s --fees %s --chain-id %s -y"
+	cosmosNumVotesCmdArgs  = "query gov votes %s -o json"
 )
 
 type cosmosProposalsResponse struct {
@@ -43,6 +44,10 @@ type cosmosTallyResponse struct {
 	Abstain    int64 `json:"abstain,string"`
 	No         int64 `json:"no,string"`
 	NoWithVeto int64 `json:"no_with_veto,string"`
+}
+
+type cosmosNumVotesResponse struct {
+	Votes []interface{} `json:"votes"`
 }
 
 type CosmosVoter struct {
@@ -95,6 +100,7 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 		if err != nil {
 			return nil, err
 		}
+		voted, _ := cv.numVoted(ctx, cosmosProp.ProposalID)
 		all := tally.Yes + tally.No + tally.NoWithVeto
 		yes := int(tally.Yes * 100 / all)
 		no := int(tally.No * 100 / all)
@@ -109,6 +115,7 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 			VotedNo:     no,
 			Veto:        veto,
 			DeadlineHrs: endsInHrs,
+			Voted:       voted,
 		})
 	}
 	return proposals, nil
@@ -168,6 +175,26 @@ func (cv *CosmosVoter) tally(ctx context.Context, id string) (*cosmosTallyRespon
 		return nil, fmt.Errorf("failed to unmarshal tally query response: %v", err)
 	}
 	return tally, nil
+}
+
+func (cv *CosmosVoter) numVoted(ctx context.Context, id string) (int, error) {
+	args := strings.Fields(fmt.Sprintf(cosmosNumVotesCmdArgs, id))
+	stdout, stderr, err := cv.runner.Run(
+		ctx,
+		cv.daemonPath,
+		args,
+		nil,
+	)
+	if err != nil {
+		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
+		return 0, fmt.Errorf("failed to run tally query: %v", err)
+	}
+	votes := &cosmosNumVotesResponse{}
+	if err := json.Unmarshal(stdout, votes); err != nil {
+		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
+		return 0, fmt.Errorf("failed to unmarshal tally query response: %v", err)
+	}
+	return len(votes.Votes), nil
 }
 
 func logCmdErr(cmd string, args []string, stdout []byte, stderr []byte, err error) {
