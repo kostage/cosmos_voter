@@ -22,7 +22,7 @@ func NewTgBot(token, username string) (*TgBot, error) {
 	}
 	return &TgBot{
 		BotAPI:   api,
-		username: ("@" + username),
+		username: username,
 	}, nil
 }
 
