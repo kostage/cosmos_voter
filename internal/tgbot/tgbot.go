@@ -6,23 +6,20 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 )
 
 type TgBot struct {
 	*tgbotapi.BotAPI
-	username string
 }
 
-func NewTgBot(token, username string) (*TgBot, error) {
+func NewTgBot(token string) (*TgBot, error) {
 	// Create a new bot with your token
 	api, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create tg bot API")
 	}
 	return &TgBot{
-		BotAPI:   api,
-		username: username,
+		BotAPI: api,
 	}, nil
 }
 
@@ -44,9 +41,6 @@ func (b *TgBot) ProcessUpdates(
 			if !ok {
 				return fmt.Errorf("updates chan closed")
 			}
-			if ok := b.validateUser(update); !ok {
-				continue
-			}
 			if err := handler(update); err != nil {
 				return err
 			}
@@ -54,16 +48,4 @@ func (b *TgBot) ProcessUpdates(
 			return nil
 		}
 	}
-}
-
-func (b *TgBot) validateUser(update tgbotapi.Update) bool {
-	if update.Message.From == nil {
-		log.Error("skipped update from unknown user")
-		return false
-	}
-	if update.Message.From.UserName != b.username {
-		log.Errorf("skipped update from some motherfucker: %s", update.Message.From.UserName)
-		return false
-	}
-	return true
 }

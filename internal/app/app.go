@@ -26,14 +26,16 @@ var (
 )
 
 type App struct {
-	voter vote.Voter
-	bot   *tgbot.TgBot
+	voter    vote.Voter
+	bot      *tgbot.TgBot
+	username string
 }
 
-func NewApp(voter vote.Voter, bot *tgbot.TgBot) *App {
+func NewApp(voter vote.Voter, bot *tgbot.TgBot, username string) *App {
 	return &App{
-		voter: voter,
-		bot:   bot,
+		voter:    voter,
+		bot:      bot,
+		username: username,
 	}
 }
 
@@ -68,6 +70,10 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 		}
 	}
 	log.Info("received start")
+	if ok := app.validateUser(update); !ok {
+		log.Error("skipping command")
+		return nil
+	}
 	ctx, cancel := context.WithTimeout(ctx, cmdTimeout)
 	defer cancel()
 	proposals, err := app.voter.GetVoting(ctx)
@@ -163,4 +169,16 @@ func (app *App) ProcessVoteCallback(ctx context.Context, update tgbotapi.Update)
 	}
 	log.Infof("voted %s on proposal %s", voteStr, propID)
 	return nil
+}
+
+func (app *App) validateUser(update tgbotapi.Update) bool {
+	if update.Message.From == nil {
+		log.Error("unknown user")
+		return false
+	}
+	if update.Message.From.UserName != app.username {
+		log.Errorf("command from some motherfucker: %s", update.Message.From.UserName)
+		return false
+	}
+	return true
 }
