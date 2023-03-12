@@ -21,13 +21,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	bot, err := tgbot.NewTgBot(conf.BotToken, conf.AllowedUser)
+	bot, err := tgbot.NewTgBot(conf.BotToken)
 	if err != nil {
 		log.Fatal(err)
 	}
 	runner := cmdrunner.NewCmdRunner()
 	voter := vote.NewCosmosVoter(runner, conf.DaemonPath, conf.KeyChainPass, conf.VoterWallet)
-	app := app.NewApp(voter, bot)
+	app := app.NewApp(voter, bot, conf.AllowedUser)
 	if err := app.Run(context.TODO()); err != nil {
 		log.Fatal(err)
 	}
