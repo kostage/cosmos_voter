@@ -56,12 +56,16 @@ func NewCosmosVoter(
 	daemonPath string,
 	keychainPass string,
 	voterWallet string,
+	fees string,
+	chainId string,
 ) *CosmosVoter {
 	return &CosmosVoter{
 		runner:       runner,
 		daemonPath:   daemonPath,
 		keychainPass: keychainPass,
 		voterWallet:  voterWallet,
+		fees:         fees,
+		chainId:      chainId,
 	}
 }
 

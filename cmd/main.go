@@ -26,7 +26,14 @@ func main() {
 		log.Fatal(err)
 	}
 	runner := cmdrunner.NewCmdRunner()
-	voter := vote.NewCosmosVoter(runner, conf.DaemonPath, conf.KeyChainPass, conf.VoterWallet)
+	voter := vote.NewCosmosVoter(
+		runner,
+		conf.DaemonPath,
+		conf.KeyChainPass,
+		conf.VoterWallet,
+		conf.Fees,
+		conf.ChainId,
+	)
 	app := app.NewApp(voter, bot, conf.AllowedUser)
 	if err := app.Run(context.TODO()); err != nil {
 		log.Fatal(err)
