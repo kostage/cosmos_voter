@@ -11,6 +11,7 @@ type Proposal struct {
 	VotedYes    int
 	VotedNo     int
 	Veto        int
+	DeadlineHrs float64
 }
 
 //go:generate mockgen -source vote.go -destination vote_mock.go -package vote

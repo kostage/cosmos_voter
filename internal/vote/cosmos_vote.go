@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"strings"
+	"time"
 
 	"github.com/kostage/cosmos_voter/internal/cmdrunner"
 	log "github.com/sirupsen/logrus"
@@ -22,8 +24,9 @@ type cosmosProposalsResponse struct {
 }
 
 type cosmosProposal struct {
-	ProposalID string                `json:"proposal_id"`
-	Content    cosmosProposalContent `json:"content"`
+	ProposalID    string                `json:"proposal_id"`
+	Content       cosmosProposalContent `json:"content"`
+	VotingEndTime time.Time             `json:"voting_end_time"`
 }
 
 type cosmosProposalContent struct {
@@ -96,6 +99,8 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 		yes := int(tally.Yes * 100 / all)
 		no := int(tally.No * 100 / all)
 		veto := int(tally.NoWithVeto * 100 / all)
+		endsInHrs := cosmosProp.VotingEndTime.Sub(time.Now().UTC()).Hours()
+		endsInHrs = math.Round(endsInHrs*100) / 100
 		proposals = append(proposals, Proposal{
 			Id:          cosmosProp.ProposalID,
 			Title:       cosmosProp.Content.Title,
@@ -103,6 +108,7 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 			VotedYes:    yes,
 			VotedNo:     no,
 			Veto:        veto,
+			DeadlineHrs: endsInHrs,
 		})
 	}
 	return proposals, nil
