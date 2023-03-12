@@ -164,7 +164,7 @@ func (c *cmdRunner) wait(ctx context.Context) error {
 }
 
 func (c *cmdRunner) writeStdin(in []byte) error {
-	if _, err := io.WriteString(c.inPipe, string(in)+"\n"); err != nil {
+	if _, err := c.inPipe.Write(append(in, '\n')); err != nil {
 		return err
 	}
 	return nil
