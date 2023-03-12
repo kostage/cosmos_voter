@@ -17,5 +17,5 @@ type Proposal struct {
 type Voter interface {
 	GetVoting(context.Context) ([]Proposal, error)
 	HasVoted(context.Context, string) (bool, error)
-	Vote(context.Context, string, bool) error
+	Vote(context.Context, string, string) error
 }

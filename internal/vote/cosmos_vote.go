@@ -14,6 +14,7 @@ var (
 	cosmosGetVotingCmdArgs = "query gov proposals --status VotingPeriod -o json"
 	cosmosHasVotedCmdArgs  = "query gov vote %s %s -o json"
 	cosmosTallyCmdArgs     = "query gov tally %s -o json"
+	cosmosVoteCmdArgs      = "tx gov vote %s %s --from %s --fees %s --chain-id %s"
 )
 
 type cosmosProposalsResponse struct {
@@ -46,6 +47,8 @@ type CosmosVoter struct {
 	daemonPath   string
 	keychainPass string
 	voterWallet  string
+	fees         string
+	chainId      string
 }
 
 func NewCosmosVoter(
@@ -120,7 +123,20 @@ func (cv *CosmosVoter) HasVoted(ctx context.Context, id string) (bool, error) {
 	return (hasVoted.Option == "VOTE_OPTION_YES"), nil
 }
 
-func (cv *CosmosVoter) Vote(ctx context.Context, id string, vote bool) error {
+func (cv *CosmosVoter) Vote(ctx context.Context, id string, vote string) error {
+	args := strings.Fields(fmt.Sprintf(
+		cosmosVoteCmdArgs, id, vote, cv.voterWallet, cv.fees, cv.chainId))
+	stdout, stderr, err := cv.runner.Run(
+		ctx,
+		cv.daemonPath,
+		args,
+		[]byte(cv.keychainPass),
+	)
+	if err != nil {
+		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
+		return fmt.Errorf("failed to run vote tx: %v", err)
+	}
+	log.Infof("vote tx:\n%s", string(stdout))
 	return nil
 }
 

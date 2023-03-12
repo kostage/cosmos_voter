@@ -114,7 +114,7 @@ func (app *App) SendVotePrompt(prop vote.Proposal, chatID int64) error {
 	}
 
 	// Send the keyboard to the user
-	msg = tgbotapi.NewMessage(chatID, "Your Vote")
+	msg = tgbotapi.NewMessage(chatID, "Please vote yes, no or skip for now")
 	msg.ReplyMarkup = keyboard
 	if _, err := app.bot.BotAPI.Send(msg); err != nil {
 		return errors.Wrap(err, "failed to send vote keyboard")
@@ -145,18 +145,18 @@ func (app *App) ProcessVoteCallback(ctx context.Context, update tgbotapi.Update)
 	if _, err := fmt.Sscanf(update.CallbackQuery.Data, voteButtonData, &voteStr, &propID); err != nil {
 		return reportErr(err)
 	}
-	vote := false
-	if voteStr == "yes" {
-		vote = true
-	} else if voteStr == "no" {
-	} else if voteStr == "skip" {
-	} else {
+	switch voteStr {
+	case "yes":
+	case "no":
+	case "skip":
+	default:
+		log.Errorf("vote is not [yes|no|skip] in callback '%s'", update.CallbackQuery.Data)
 		return reportErr(fmt.Errorf("vote is not [yes|no|skip]"))
 	}
 	if voteStr != "skip" {
 		ctx, cancel := context.WithTimeout(ctx, cmdTimeout)
 		defer cancel()
-		if err := app.voter.Vote(ctx, propID, vote); err != nil {
+		if err := app.voter.Vote(ctx, propID, voteStr); err != nil {
 			return reportErr(errors.Wrap(err, "vote failed"))
 		}
 	}

@@ -14,6 +14,8 @@ type Config struct {
 	KeyChainPass string `yaml:"keychain_password"`
 	DaemonPath   string `yaml:"deamon_path"`
 	AllowedUser  string `yaml:"allowed_user"`
+	Fees         string `yaml:"fees"`
+	ChainId      string `yaml:"chain_id"`
 }
 
 func ParseConfig(path string) (*Config, error) {
