@@ -70,7 +70,6 @@ func (c *cmdRunner) Run(
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			defer c.inPipe.Close()
 			if err := c.writeStdin(input); err != nil {
 				log.Errorf("command '%s, %v' write stdin failed: %v", command, args, err)
 			}
