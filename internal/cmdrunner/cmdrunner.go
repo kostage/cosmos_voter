@@ -85,7 +85,9 @@ func (c *cmdRunner) start(
 	args []string,
 	hasInput bool,
 ) error {
+	c.reset()
 	var err error
+	log.Infof("Running command %s with args %v", command, args)
 	c.cmd = exec.Command(command, args...)
 	c.cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	c.outPipe, err = c.cmd.StdoutPipe()
@@ -207,4 +209,13 @@ func (c *cmdRunner) sendSignal(sig syscall.Signal) {
 	if err := syscall.Kill(-c.cmd.Process.Pid, sig); err != nil {
 		log.Errorf("failed to send signal %v to process: %v", sig, err)
 	}
+}
+
+func (c *cmdRunner) reset() {
+	c.cmd = nil
+	c.outPipe = nil
+	c.errPipe = nil
+	c.inPipe = nil
+	c.out = nil
+	c.err = nil
 }

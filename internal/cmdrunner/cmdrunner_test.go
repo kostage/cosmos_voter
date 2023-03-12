@@ -66,3 +66,38 @@ func TestCmd_SuccessWithStdoutAndStdErrAndStdIn(t *testing.T) {
 	assert.Equal(t, "hello\n", string(stdout))
 	assert.Equal(t, "darkness, my old friend\n", string(stderr))
 }
+
+func TestCmd_SuccessReuse(t *testing.T) {
+	r := NewCmdRunner()
+	stdout, stderr, err := r.Run(
+		context.Background(),
+		"sh", []string{
+			"-c",
+			`echo hello && \
+			read input && \
+			[ $input = password ] && \
+			echo 'darkness, my old friend' >& 2 ||\
+			exit 1`,
+		},
+		[]byte("password"),
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, "hello\n", string(stdout))
+	assert.Equal(t, "darkness, my old friend\n", string(stderr))
+
+	stdout, stderr, err = r.Run(
+		context.Background(),
+		"sh", []string{
+			"-c",
+			`echo hello && \
+			read input && \
+			[ $input = password ] && \
+			echo 'darkness, my old friend' >& 2 ||\
+			exit 1`,
+		},
+		[]byte("password"),
+	)
+	assert.NoError(t, err)
+	assert.Equal(t, "hello\n", string(stdout))
+	assert.Equal(t, "darkness, my old friend\n", string(stderr))
+}

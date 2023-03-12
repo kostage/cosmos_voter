@@ -13,6 +13,7 @@ type Config struct {
 	VoterWallet  string `yaml:"voter_wallet"`
 	KeyChainPass string `yaml:"keychain_password"`
 	DaemonPath   string `yaml:"deamon_path"`
+	AllowedUser  string `yaml:"allowed_user"`
 }
 
 func ParseConfig(path string) (*Config, error) {

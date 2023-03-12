@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/kostage/cosmos_voter/internal/cmdrunner"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -75,6 +76,7 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 	}
 	cosmosProposals := cosmosProposalsResponse{}
 	if err := json.Unmarshal(stdout, &cosmosProposals); err != nil {
+		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
 		return nil, fmt.Errorf("failed to unmarshal cosmos proposals: %v", err)
 	}
 	proposals := make([]Proposal, 0, len(cosmosProposals.Proposals))
@@ -101,7 +103,7 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 
 func (cv *CosmosVoter) HasVoted(ctx context.Context, id string) (bool, error) {
 	args := strings.Fields(fmt.Sprintf(cosmosHasVotedCmdArgs, id, cv.voterWallet))
-	stdout, _, err := cv.runner.Run(
+	stdout, stderr, err := cv.runner.Run(
 		ctx,
 		cv.daemonPath,
 		args,
@@ -112,6 +114,7 @@ func (cv *CosmosVoter) HasVoted(ctx context.Context, id string) (bool, error) {
 	}
 	hasVoted := cosmosHasVotedResponse{}
 	if err := json.Unmarshal(stdout, &hasVoted); err != nil {
+		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
 		return false, fmt.Errorf("failed to unmarshal voted query response: %v", err)
 	}
 	return (hasVoted.Option == "VOTE_OPTION_YES"), nil
@@ -135,11 +138,15 @@ func (cv *CosmosVoter) tally(ctx context.Context, id string) (*cosmosTallyRespon
 	}
 	tally := &cosmosTallyResponse{}
 	if err := json.Unmarshal(stdout, tally); err != nil {
+		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
 		return nil, fmt.Errorf("failed to unmarshal tally query response: %v", err)
 	}
 	return tally, nil
 }
 
-func logCmdErr(cmd string, args []string, stdout []byte, stderr []byte, err error) error {
-	return fmt.Errorf("cmd error")
+func logCmdErr(cmd string, args []string, stdout []byte, stderr []byte, err error) {
+	log.Errorf(
+		"Command %s with args %v failed\nCaptured stdout:\n%s\nCaptured stderr:\n%s\n",
+		cmd, args, string(stdout), string(stderr),
+	)
 }

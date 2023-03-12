@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	bot, err := tgbot.NewTgBot(conf.BotToken)
+	bot, err := tgbot.NewTgBot(conf.BotToken, conf.AllowedUser)
 	if err != nil {
 		log.Fatal(err)
 	}

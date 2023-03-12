@@ -67,6 +67,7 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 			return errors.Wrap(err, "failed to send tg message")
 		}
 	}
+	log.Info("received start")
 	ctx, cancel := context.WithTimeout(ctx, cmdTimeout)
 	defer cancel()
 	proposals, err := app.voter.GetVoting(ctx)
@@ -74,11 +75,13 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 		return errors.Wrap(err, "failed to get proposals")
 	}
 	for _, prop := range proposals {
+		log.Infof("found proposal: %s", prop.Id)
 		if voted, _ := app.voter.HasVoted(ctx, prop.Id); voted {
 			log.Infof("skipped already voted proposal %s", prop.Id)
 			continue
 		}
 		if err := app.SendVotePrompt(prop, update.Message.Chat.ID); err != nil {
+			log.Infof("sent prompt for proposal: %s", prop.Id)
 			return errors.Wrap(err, "failed to send vote prompt")
 		}
 	}
@@ -127,6 +130,7 @@ func (app *App) ProcessVoteCallback(ctx context.Context, update tgbotapi.Update)
 		}
 		return nil
 	}
+	log.Infof("received callback: %s", update.CallbackQuery.Data)
 	var voteStr string
 	var propID string
 	if _, err := fmt.Sscanf(update.CallbackQuery.Data, voteButtonData, &voteStr, &propID); err != nil {
@@ -157,5 +161,6 @@ func (app *App) ProcessVoteCallback(ctx context.Context, update tgbotapi.Update)
 	if _, err := app.bot.BotAPI.AnswerCallbackQuery(callbackAnswer); err != nil {
 		return errors.Wrap(err, "failed to answer the callback query to remove the 'loading' animation from the button")
 	}
+	log.Infof("voted %s on proposal %s", voteStr, propID)
 	return nil
 }
