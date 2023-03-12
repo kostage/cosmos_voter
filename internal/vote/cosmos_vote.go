@@ -14,7 +14,7 @@ var (
 	cosmosGetVotingCmdArgs = "query gov proposals --status VotingPeriod -o json"
 	cosmosHasVotedCmdArgs  = "query gov vote %s %s -o json"
 	cosmosTallyCmdArgs     = "query gov tally %s -o json"
-	cosmosVoteCmdArgs      = "tx gov vote %s %s --from %s --fees %s --chain-id %s"
+	cosmosVoteCmdArgs      = "tx gov vote %s %s --from %s --fees %s --chain-id %s -y"
 )
 
 type cosmosProposalsResponse struct {
