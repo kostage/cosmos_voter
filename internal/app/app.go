@@ -98,7 +98,10 @@ func (app *App) SendVotePrompt(prop vote.Proposal, chatID int64) error {
 	// Create the keyboard with two buttons
 	yesButton := tgbotapi.NewInlineKeyboardButtonData("Yes", fmt.Sprintf(voteButtonData, "yes", prop.Id))
 	noButton := tgbotapi.NewInlineKeyboardButtonData("No", fmt.Sprintf(voteButtonData, "no", prop.Id))
-	keyboard := tgbotapi.NewInlineKeyboardMarkup([]tgbotapi.InlineKeyboardButton{yesButton, noButton})
+	skipButton := tgbotapi.NewInlineKeyboardButtonData("Skip", fmt.Sprintf(voteButtonData, "skip", prop.Id))
+	keyboard := tgbotapi.NewInlineKeyboardMarkup(
+		[]tgbotapi.InlineKeyboardButton{yesButton, noButton, skipButton},
+	)
 
 	// Send the message to the user
 	promptBuf := &bytes.Buffer{}
@@ -146,13 +149,16 @@ func (app *App) ProcessVoteCallback(ctx context.Context, update tgbotapi.Update)
 	if voteStr == "yes" {
 		vote = true
 	} else if voteStr == "no" {
+	} else if voteStr == "skip" {
 	} else {
-		return reportErr(fmt.Errorf("vote is not [yes|no]"))
+		return reportErr(fmt.Errorf("vote is not [yes|no|skip]"))
 	}
-	ctx, cancel := context.WithTimeout(ctx, cmdTimeout)
-	defer cancel()
-	if err := app.voter.Vote(ctx, propID, vote); err != nil {
-		return reportErr(errors.Wrap(err, "vote failed"))
+	if voteStr != "skip" {
+		ctx, cancel := context.WithTimeout(ctx, cmdTimeout)
+		defer cancel()
+		if err := app.voter.Vote(ctx, propID, vote); err != nil {
+			return reportErr(errors.Wrap(err, "vote failed"))
+		}
 	}
 	congrat := fmt.Sprintf("You voted %s on proposal %s", voteStr, propID)
 	msg := tgbotapi.NewEditMessageText(
