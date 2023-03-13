@@ -102,9 +102,14 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 		}
 		voted, _ := cv.numVoted(ctx, cosmosProp.ProposalID)
 		all := tally.Yes + tally.No + tally.NoWithVeto
-		yes := int(tally.Yes * 100 / all)
-		no := int(tally.No * 100 / all)
-		veto := int(tally.NoWithVeto * 100 / all)
+		yes, no, veto := 0, 0, 0
+		if all == 0 {
+			log.Warn("nobody voted yet, prevent div by zero")
+		} else {
+			yes = int(tally.Yes * 100 / all)
+			no = int(tally.No * 100 / all)
+			veto = int(tally.NoWithVeto * 100 / all)
+		}
 		endsInHrs := cosmosProp.VotingEndTime.Sub(time.Now().UTC()).Hours()
 		endsInHrs = math.Round(endsInHrs*100) / 100
 		proposals = append(proposals, Proposal{
