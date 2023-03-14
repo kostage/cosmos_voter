@@ -80,6 +80,13 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 	if err != nil {
 		return errors.Wrap(err, "failed to get proposals")
 	}
+	if len(proposals) == 0 {
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "No active proposals found")
+		if _, err := app.bot.BotAPI.Send(msg); err != nil {
+			log.Info("found 0 proposals")
+			return errors.Wrap(err, "failed to send msg")
+		}
+	}
 	for _, prop := range proposals {
 		log.Infof("found proposal: %s", prop.Id)
 		if voted, _ := app.voter.HasVoted(ctx, prop.Id); voted {
