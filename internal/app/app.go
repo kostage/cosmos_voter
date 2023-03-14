@@ -86,7 +86,9 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 			log.Info("found 0 proposals")
 			return errors.Wrap(err, "failed to send msg")
 		}
+		return nil
 	}
+	foundUnvoted := false
 	for _, prop := range proposals {
 		log.Infof("found proposal: %s", prop.Id)
 		if voted, _ := app.voter.HasVoted(ctx, prop.Id); voted {
@@ -96,6 +98,15 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 		if err := app.SendVotePrompt(prop, update.Message.Chat.ID); err != nil {
 			log.Infof("sent prompt for proposal: %s", prop.Id)
 			return errors.Wrap(err, "failed to send vote prompt")
+		}
+		foundUnvoted = true
+	}
+	if !foundUnvoted {
+		text := fmt.Sprintf("Found %d proposals, all voted", len(proposals))
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
+		if _, err := app.bot.BotAPI.Send(msg); err != nil {
+			log.Info("found 0 unvoted proposals")
+			return errors.Wrap(err, "failed to send msg")
 		}
 	}
 	return nil
