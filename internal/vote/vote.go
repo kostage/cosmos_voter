@@ -8,9 +8,9 @@ type Proposal struct {
 	Id          string
 	Title       string
 	Description string
-	VotedYes    int
-	VotedNo     int
-	Veto        int
+	VotedYes    float64
+	VotedNo     float64
+	Veto        float64
 	DeadlineHrs float64
 	Voted       float64
 }

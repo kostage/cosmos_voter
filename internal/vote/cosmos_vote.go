@@ -115,10 +115,10 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 		if err != nil {
 			return nil, err
 		}
-		all := tally.Yes + tally.No + tally.NoWithVeto + tally.Abstain
-		yes := tally.Yes * 100 / all
-		no := tally.No * 100 / all
-		veto := tally.NoWithVeto * 100 / all
+		all := float64(tally.Yes + tally.No + tally.NoWithVeto + tally.Abstain)
+		yes := float64(tally.Yes) * 100 / all
+		no := float64(tally.No) * 100 / all
+		veto := float64(tally.NoWithVeto) * 100 / all
 		endsInHrs := cosmosProp.VotingEndTime.Sub(time.Now().UTC()).Hours()
 		endsInHrs = math.Round(endsInHrs*100) / 100
 		voted := float64(all) / float64(totalPower*10000)
@@ -127,9 +127,9 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 			Id:          cosmosProp.ProposalID,
 			Title:       cosmosProp.Content.Title,
 			Description: cosmosProp.Content.Description,
-			VotedYes:    yes,
-			VotedNo:     no,
-			Veto:        veto,
+			VotedYes:    math.Round(yes*100) / 100,
+			VotedNo:     math.Round(no*100) / 100,
+			Veto:        math.Round(veto*100) / 100,
 			DeadlineHrs: endsInHrs,
 			Voted:       voted,
 		})
