@@ -21,8 +21,8 @@ var example_vote []byte
 //go:embed example_tally.json
 var example_tally []byte
 
-//go:embed example_votes.json
-var example_votes []byte
+//go:embed example_validators.yaml
+var example_validators []byte
 
 func TestGetCosmosProposals(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -31,16 +31,12 @@ func TestGetCosmosProposals(t *testing.T) {
 	expectedTallyArgs1 := []string{"query", "gov", "tally", "291", "-o", "json"}
 	expectedTallyArgs2 := []string{"query", "gov", "tally", "294", "-o", "json"}
 	expectedTallyArgs3 := []string{"query", "gov", "tally", "295", "-o", "json"}
-	expectedNumVotedArgs1 := []string{"query", "gov", "votes", "291", "-o", "json"}
-	expectedNumVotedArgs2 := []string{"query", "gov", "votes", "294", "-o", "json"}
-	expectedNumVotedArgs3 := []string{"query", "gov", "votes", "295", "-o", "json"}
+	expectedGetValidatotsArgs := []string{"query", "tendermint-validator-set"}
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedPropArgs, nil).Return(example_proposals, nil, nil)
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedTallyArgs1, nil).Return(example_tally, nil, nil)
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedTallyArgs2, nil).Return(example_tally, nil, nil)
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedTallyArgs3, nil).Return(example_tally, nil, nil)
-	runner.EXPECT().Run(gomock.Any(), "daemon", expectedNumVotedArgs1, nil).Return(example_votes, nil, nil)
-	runner.EXPECT().Run(gomock.Any(), "daemon", expectedNumVotedArgs2, nil).Return(example_votes, nil, nil)
-	runner.EXPECT().Run(gomock.Any(), "daemon", expectedNumVotedArgs3, nil).Return(example_votes, nil, nil)
+	runner.EXPECT().Run(gomock.Any(), "daemon", expectedGetValidatotsArgs, nil).Return(example_validators, nil, nil)
 
 	var voter Voter
 	voter = NewCosmosVoter(runner, "daemon", "password", "", "", "")
@@ -86,16 +82,4 @@ func TestGetCosmosVotedParseFailed(t *testing.T) {
 	voted, err := voter.HasVoted(context.Background(), "1")
 	assert.Error(t, err)
 	assert.False(t, voted)
-}
-
-func TestGetCosmosNumVotes(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	runner := cmdrunner.NewMockCmdRunner(ctrl)
-	expectedArgs := []string{"query", "gov", "votes", "1", "-o", "json"}
-	runner.EXPECT().Run(gomock.Any(), "daemon", expectedArgs, nil).Return(example_votes, nil, nil)
-
-	voter := NewCosmosVoter(runner, "daemon", "password", "voterWallet", "", "")
-	voted, err := voter.numVoted(context.Background(), "1")
-	assert.NoError(t, err)
-	assert.Greater(t, voted, 0)
 }

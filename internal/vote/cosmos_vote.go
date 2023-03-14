@@ -5,19 +5,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/kostage/cosmos_voter/internal/cmdrunner"
 	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v3"
 )
 
 var (
-	cosmosGetVotingCmdArgs = "query gov proposals --status VotingPeriod -o json"
-	cosmosHasVotedCmdArgs  = "query gov vote %s %s -o json"
-	cosmosTallyCmdArgs     = "query gov tally %s -o json"
-	cosmosVoteCmdArgs      = "tx gov vote %s %s --from %s --fees %s --chain-id %s -y"
-	cosmosNumVotesCmdArgs  = "query gov votes %s -o json"
+	cosmosGetVotingCmdArgs  = "query gov proposals --status VotingPeriod -o json"
+	cosmosHasVotedCmdArgs   = "query gov vote %s %s -o json"
+	cosmosTallyCmdArgs      = "query gov tally %s -o json"
+	cosmosVoteCmdArgs       = "tx gov vote %s %s --from %s --fees %s --chain-id %s -y"
+	cosmosNumVotesCmdArgs   = "query gov votes %s -o json"
+	cosmosValidatorsCmdArgs = "query tendermint-validator-set"
 )
 
 type cosmosProposalsResponse struct {
@@ -40,14 +43,22 @@ type cosmosHasVotedResponse struct {
 }
 
 type cosmosTallyResponse struct {
-	Yes        int64 `json:"yes,string"`
-	Abstain    int64 `json:"abstain,string"`
-	No         int64 `json:"no,string"`
-	NoWithVeto int64 `json:"no_with_veto,string"`
+	Yes        int `json:"yes,string"`
+	Abstain    int `json:"abstain,string"`
+	No         int `json:"no,string"`
+	NoWithVeto int `json:"no_with_veto,string"`
 }
 
 type cosmosNumVotesResponse struct {
 	Votes []interface{} `json:"votes"`
+}
+
+type cosmosValidatorsResponse struct {
+	Validators []cosmosValidator `yaml:"validators"`
+}
+
+type cosmosValidator struct {
+	VotingPower string `yaml:"voting_power"`
 }
 
 type CosmosVoter struct {
@@ -94,24 +105,24 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
 		return nil, fmt.Errorf("failed to unmarshal cosmos proposals: %v", err)
 	}
+	totalPower, err := cv.totalVotingPower(ctx)
+	if err != nil {
+		return nil, err
+	}
 	proposals := make([]Proposal, 0, len(cosmosProposals.Proposals))
 	for _, cosmosProp := range cosmosProposals.Proposals {
 		tally, err := cv.tally(ctx, cosmosProp.ProposalID)
 		if err != nil {
 			return nil, err
 		}
-		voted, _ := cv.numVoted(ctx, cosmosProp.ProposalID)
-		all := tally.Yes + tally.No + tally.NoWithVeto
-		yes, no, veto := 0, 0, 0
-		if all == 0 {
-			log.Warn("nobody voted yet, prevent div by zero")
-		} else {
-			yes = int(tally.Yes * 100 / all)
-			no = int(tally.No * 100 / all)
-			veto = int(tally.NoWithVeto * 100 / all)
-		}
+		all := tally.Yes + tally.No + tally.NoWithVeto + tally.Abstain
+		yes := tally.Yes * 100 / all
+		no := tally.No * 100 / all
+		veto := tally.NoWithVeto * 100 / all
 		endsInHrs := cosmosProp.VotingEndTime.Sub(time.Now().UTC()).Hours()
 		endsInHrs = math.Round(endsInHrs*100) / 100
+		voted := float64(all) / float64(totalPower*10000)
+		voted = math.Round(voted*100) / 100
 		proposals = append(proposals, Proposal{
 			Id:          cosmosProp.ProposalID,
 			Title:       cosmosProp.Content.Title,
@@ -182,8 +193,8 @@ func (cv *CosmosVoter) tally(ctx context.Context, id string) (*cosmosTallyRespon
 	return tally, nil
 }
 
-func (cv *CosmosVoter) numVoted(ctx context.Context, id string) (int, error) {
-	args := strings.Fields(fmt.Sprintf(cosmosNumVotesCmdArgs, id))
+func (cv *CosmosVoter) totalVotingPower(ctx context.Context) (int, error) {
+	args := strings.Fields(fmt.Sprintf(cosmosValidatorsCmdArgs))
 	stdout, stderr, err := cv.runner.Run(
 		ctx,
 		cv.daemonPath,
@@ -194,12 +205,20 @@ func (cv *CosmosVoter) numVoted(ctx context.Context, id string) (int, error) {
 		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
 		return 0, fmt.Errorf("failed to run tally query: %v", err)
 	}
-	votes := &cosmosNumVotesResponse{}
-	if err := json.Unmarshal(stdout, votes); err != nil {
+	validators := &cosmosValidatorsResponse{}
+	if err := yaml.Unmarshal(stdout, validators); err != nil {
 		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
-		return 0, fmt.Errorf("failed to unmarshal tally query response: %v", err)
+		return 0, fmt.Errorf("failed to unmarshal tendermint validators response: %v", err)
 	}
-	return len(votes.Votes), nil
+	totalPower := 0
+	for _, validator := range validators.Validators {
+		pow, err := strconv.Atoi(validator.VotingPower)
+		if err != nil {
+			return 0, fmt.Errorf("failed to unmarshal tendermint validators response: voting power is not integer")
+		}
+		totalPower += pow
+	}
+	return totalPower, nil
 }
 
 func logCmdErr(cmd string, args []string, stdout []byte, stderr []byte, err error) {

@@ -1,0 +1,451 @@
+validators:
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "3233170"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "2793752"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "2306989"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "2270827"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "2137258"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "1646041"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "1579003"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "1345392"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "1007725"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "969008"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "903347"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "835573"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "822880"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "813765"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "781311"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "779470"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "771372"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "771125"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "757439"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "755208"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "751423"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "750059"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "746439"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "743810"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "743531"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "740801"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "740798"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "731826"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "729074"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "722239"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "721888"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "714172"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "691686"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "683427"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "662556"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "661891"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "657250"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "607269"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "596902"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "583402"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "583012"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "580653"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "577922"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "576703"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "563944"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "562391"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "559032"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "551444"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "540517"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "524722"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "523181"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "522500"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "521171"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "520121"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "520033"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "514186"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "505429"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "495870"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "474001"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "468033"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "464557"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "452940"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "441993"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "441476"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "390679"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "351887"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "285449"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "267806"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "262305"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "253211"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "245325"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "210543"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "102226"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "85687"
+- address: valoper
+  proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: alalal
+  voting_power: "50441"
