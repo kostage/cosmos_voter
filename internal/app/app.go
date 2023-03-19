@@ -62,52 +62,47 @@ func (app *App) Run(ctx context.Context) error {
 }
 
 func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) error {
-	if update.Message.Command() != "start" {
-		errResp := fmt.Sprintf("Unknown command: %s", update.Message.Command())
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, errResp)
+	reportErr := func(err error) error {
+		errText := fmt.Sprintf("Failed to process command '%s', err: %v", update.Message.Command(), err)
+		log.Error(errText)
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, errText)
 		if _, err := app.bot.BotAPI.Send(msg); err != nil {
-			return errors.Wrap(err, "failed to send tg message")
+			return errors.Wrapf(err, "failed to send tg message: %v", msg)
 		}
+		return nil
+	}
+	if update.Message.Command() != "start" {
+		return reportErr(fmt.Errorf("unknown command"))
 	}
 	log.Info("received start")
 	if ok := app.validateUser(update); !ok {
-		log.Error("skipping command")
-		return nil
+		return reportErr(fmt.Errorf("unknown user"))
 	}
 	ctx, cancel := context.WithTimeout(ctx, cmdTimeout)
 	defer cancel()
 	proposals, err := app.voter.GetVoting(ctx)
 	if err != nil {
-		return errors.Wrap(err, "failed to get proposals")
+		return reportErr(errors.Wrap(err, "failed to get proposals"))
 	}
 	if len(proposals) == 0 {
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "No active proposals found")
-		if _, err := app.bot.BotAPI.Send(msg); err != nil {
-			log.Info("found 0 proposals")
-			return errors.Wrap(err, "failed to send msg")
-		}
-		return nil
+		return reportErr(fmt.Errorf("got 0 proposals"))
 	}
 	foundUnvoted := false
 	for _, prop := range proposals {
 		log.Infof("found proposal: %s", prop.Id)
 		if voted, _ := app.voter.HasVoted(ctx, prop.Id); voted {
-			log.Infof("skipped already voted proposal %s", prop.Id)
+			log.Infof("skip already voted proposal %s", prop.Id)
 			continue
 		}
 		if err := app.SendVotePrompt(prop, update.Message.Chat.ID); err != nil {
-			log.Infof("sent prompt for proposal: %s", prop.Id)
+			log.Errorf("failed to send prompt for proposal %s, err: %v", prop.Id, err)
 			return errors.Wrap(err, "failed to send vote prompt")
 		}
+		log.Infof("sent prompt for proposal: %s", prop.Id)
 		foundUnvoted = true
 	}
 	if !foundUnvoted {
-		text := fmt.Sprintf("Found %d proposals, all voted", len(proposals))
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
-		if _, err := app.bot.BotAPI.Send(msg); err != nil {
-			log.Info("found 0 unvoted proposals")
-			return errors.Wrap(err, "failed to send msg")
-		}
+		return reportErr(fmt.Errorf("found 0 unvoted proposals"))
 	}
 	return nil
 }
