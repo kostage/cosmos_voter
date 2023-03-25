@@ -39,6 +39,11 @@ type cosmosProposalContent struct {
 }
 
 type cosmosHasVotedResponse struct {
+	Option  string              `json:"option"`
+	Options []cosmosVotedOption `json:"options"`
+}
+
+type cosmosVotedOption struct {
 	Option string `json:"option"`
 }
 
@@ -153,7 +158,7 @@ func (cv *CosmosVoter) HasVoted(ctx context.Context, id string) (bool, error) {
 		logCmdErr(cv.daemonPath, args, stdout, stderr, err)
 		return false, fmt.Errorf("failed to unmarshal voted query response: %v", err)
 	}
-	return (hasVoted.Option == "VOTE_OPTION_YES"), nil
+	return (len(hasVoted.Options) > 0 && hasVoted.Options[0].Option == "VOTE_OPTION_YES"), nil
 }
 
 func (cv *CosmosVoter) Vote(ctx context.Context, id string, vote string) error {
