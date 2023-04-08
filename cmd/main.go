@@ -6,7 +6,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/kostage/cosmos_voter/internal/app"
-	"github.com/kostage/cosmos_voter/internal/cmdrunner"
 	"github.com/kostage/cosmos_voter/internal/config"
 	"github.com/kostage/cosmos_voter/internal/tgbot"
 	"github.com/kostage/cosmos_voter/internal/vote"
@@ -25,9 +24,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	runner := cmdrunner.NewCmdRunner()
 	voter := vote.NewCosmosVoter(
-		runner,
 		conf.DaemonPath,
 		conf.KeyChainPass,
 		conf.VoterWallet,

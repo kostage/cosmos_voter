@@ -27,6 +27,7 @@ var example_validators []byte
 func TestGetCosmosProposals(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	runner := cmdrunner.NewMockCmdRunner(ctrl)
+	defRunnerFactory = func() cmdrunner.CmdRunner { return runner }
 	expectedPropArgs := []string{"query", "gov", "proposals", "--status", "VotingPeriod", "-o", "json"}
 	expectedTallyArgs1 := []string{"query", "gov", "tally", "291", "-o", "json"}
 	expectedTallyArgs2 := []string{"query", "gov", "tally", "294", "-o", "json"}
@@ -39,7 +40,7 @@ func TestGetCosmosProposals(t *testing.T) {
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedGetValidatotsArgs, nil).Return(example_validators, nil, nil)
 
 	var voter Voter
-	voter = NewCosmosVoter(runner, "daemon", "password", "", "", "")
+	voter = NewCosmosVoter("daemon", "password", "", "", "")
 	proposals, err := voter.GetVoting(context.Background())
 	assert.NoError(t, err)
 	assert.Len(t, proposals, 3)
@@ -48,11 +49,12 @@ func TestGetCosmosProposals(t *testing.T) {
 func TestGetCosmosVoted(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	runner := cmdrunner.NewMockCmdRunner(ctrl)
+	defRunnerFactory = func() cmdrunner.CmdRunner { return runner }
 	expectedArgs := []string{"query", "gov", "vote", "1", "voterWallet", "-o", "json"}
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedArgs, nil).Return(example_vote, nil, nil)
 
 	var voter Voter
-	voter = NewCosmosVoter(runner, "daemon", "password", "voterWallet", "", "")
+	voter = NewCosmosVoter("daemon", "password", "voterWallet", "", "")
 	voted, err := voter.HasVoted(context.Background(), "1")
 	assert.NoError(t, err)
 	assert.True(t, voted)
@@ -61,11 +63,12 @@ func TestGetCosmosVoted(t *testing.T) {
 func TestGetCosmosNotVoted(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	runner := cmdrunner.NewMockCmdRunner(ctrl)
+	defRunnerFactory = func() cmdrunner.CmdRunner { return runner }
 	expectedArgs := []string{"query", "gov", "vote", "1", "voterWallet", "-o", "json"}
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedArgs, nil).Return(nil, nil, fmt.Errorf("somerr"))
 
 	var voter Voter
-	voter = NewCosmosVoter(runner, "daemon", "password", "voterWallet", "", "")
+	voter = NewCosmosVoter("daemon", "password", "voterWallet", "", "")
 	voted, err := voter.HasVoted(context.Background(), "1")
 	assert.NoError(t, err)
 	assert.False(t, voted)
@@ -74,11 +77,12 @@ func TestGetCosmosNotVoted(t *testing.T) {
 func TestGetCosmosVotedParseFailed(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	runner := cmdrunner.NewMockCmdRunner(ctrl)
+	defRunnerFactory = func() cmdrunner.CmdRunner { return runner }
 	expectedArgs := []string{"query", "gov", "vote", "1", "voterWallet", "-o", "json"}
 	runner.EXPECT().Run(gomock.Any(), "daemon", expectedArgs, nil).Return([]byte("not json"), nil, nil)
 
 	var voter Voter
-	voter = NewCosmosVoter(runner, "daemon", "password", "voterWallet", "", "")
+	voter = NewCosmosVoter("daemon", "password", "voterWallet", "", "")
 	voted, err := voter.HasVoted(context.Background(), "1")
 	assert.Error(t, err)
 	assert.False(t, voted)

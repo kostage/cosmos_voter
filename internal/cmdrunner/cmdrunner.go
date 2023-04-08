@@ -35,7 +35,7 @@ type cmdRunner struct {
 	err     []byte
 }
 
-func NewCmdRunner() *cmdRunner {
+func NewCmdRunner() CmdRunner {
 	return &cmdRunner{}
 }
 

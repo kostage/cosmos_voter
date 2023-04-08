@@ -19,8 +19,9 @@ var (
 	cosmosHasVotedCmdArgs   = "query gov vote %s %s -o json"
 	cosmosTallyCmdArgs      = "query gov tally %s -o json"
 	cosmosVoteCmdArgs       = "tx gov vote %s %s --from %s --fees %s --chain-id %s -y"
-	cosmosNumVotesCmdArgs   = "query gov votes %s -o json"
 	cosmosValidatorsCmdArgs = "query tendermint-validator-set"
+
+	defRunnerFactory = cmdrunner.NewCmdRunner
 )
 
 type cosmosProposalsResponse struct {
@@ -67,7 +68,6 @@ type cosmosValidator struct {
 }
 
 type CosmosVoter struct {
-	runner       cmdrunner.CmdRunner
 	daemonPath   string
 	keychainPass string
 	voterWallet  string
@@ -76,7 +76,6 @@ type CosmosVoter struct {
 }
 
 func NewCosmosVoter(
-	runner cmdrunner.CmdRunner,
 	daemonPath string,
 	keychainPass string,
 	voterWallet string,
@@ -84,7 +83,6 @@ func NewCosmosVoter(
 	chainId string,
 ) *CosmosVoter {
 	return &CosmosVoter{
-		runner:       runner,
 		daemonPath:   daemonPath,
 		keychainPass: keychainPass,
 		voterWallet:  voterWallet,
@@ -95,7 +93,8 @@ func NewCosmosVoter(
 
 func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 	args := strings.Fields(cosmosGetVotingCmdArgs)
-	stdout, stderr, err := cv.runner.Run(
+	runner := defRunnerFactory()
+	stdout, stderr, err := runner.Run(
 		ctx,
 		cv.daemonPath,
 		args,
@@ -144,7 +143,8 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 
 func (cv *CosmosVoter) HasVoted(ctx context.Context, id string) (bool, error) {
 	args := strings.Fields(fmt.Sprintf(cosmosHasVotedCmdArgs, id, cv.voterWallet))
-	stdout, stderr, err := cv.runner.Run(
+	runner := defRunnerFactory()
+	stdout, stderr, err := runner.Run(
 		ctx,
 		cv.daemonPath,
 		args,
@@ -164,7 +164,8 @@ func (cv *CosmosVoter) HasVoted(ctx context.Context, id string) (bool, error) {
 func (cv *CosmosVoter) Vote(ctx context.Context, id string, vote string) error {
 	args := strings.Fields(fmt.Sprintf(
 		cosmosVoteCmdArgs, id, vote, cv.voterWallet, cv.fees, cv.chainId))
-	stdout, stderr, err := cv.runner.Run(
+	runner := defRunnerFactory()
+	stdout, stderr, err := runner.Run(
 		ctx,
 		cv.daemonPath,
 		args,
@@ -180,7 +181,8 @@ func (cv *CosmosVoter) Vote(ctx context.Context, id string, vote string) error {
 
 func (cv *CosmosVoter) tally(ctx context.Context, id string) (*cosmosTallyResponse, error) {
 	args := strings.Fields(fmt.Sprintf(cosmosTallyCmdArgs, id))
-	stdout, stderr, err := cv.runner.Run(
+	runner := defRunnerFactory()
+	stdout, stderr, err := runner.Run(
 		ctx,
 		cv.daemonPath,
 		args,
@@ -200,7 +202,8 @@ func (cv *CosmosVoter) tally(ctx context.Context, id string) (*cosmosTallyRespon
 
 func (cv *CosmosVoter) totalVotingPower(ctx context.Context) (int, error) {
 	args := strings.Fields(fmt.Sprintf(cosmosValidatorsCmdArgs))
-	stdout, stderr, err := cv.runner.Run(
+	runner := defRunnerFactory()
+	stdout, stderr, err := runner.Run(
 		ctx,
 		cv.daemonPath,
 		args,
