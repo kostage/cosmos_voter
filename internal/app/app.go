@@ -17,7 +17,7 @@ import (
 const (
 	cmdTimeout = time.Second * 15
 
-	votePromptTmplFile = "votePrompt.tmpl"
+	votePromptTmplFile = "internal/app/votePrompt.tmpl"
 	voteButtonData     = "vote %s on %s"
 )
 

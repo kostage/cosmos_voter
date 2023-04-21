@@ -1,0 +1,7 @@
+bot_token: ""
+voter_wallet: ""
+keychain_password: ""
+deamon_path: "/home/user/go/bin/kujirad"
+allowed_user: ""
+chain_id: kaiyo-1
+fees: 250ukuji
