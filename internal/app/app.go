@@ -85,19 +85,14 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 		return reportErr(errors.Wrap(err, "failed to get proposals"))
 	}
 	if len(proposals) == 0 {
-		return reportErr(fmt.Errorf("got 0 proposals"))
+		return reportErr(fmt.Errorf("got 0 unvoted proposals"))
 	}
-	foundUnvoted := false
 	for _, prop := range proposals {
 		if err := app.SendVotePrompt(prop, update.Message.Chat.ID); err != nil {
 			log.Errorf("failed to send prompt for proposal %s, err: %v", prop.Id, err)
 			return errors.Wrap(err, "failed to send vote prompt")
 		}
 		log.Infof("sent prompt for proposal: %s", prop.Id)
-		foundUnvoted = true
-	}
-	if !foundUnvoted {
-		return reportErr(fmt.Errorf("found 0 unvoted proposals"))
 	}
 	return nil
 }
