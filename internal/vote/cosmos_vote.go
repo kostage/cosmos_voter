@@ -29,9 +29,13 @@ type cosmosProposalsResponse struct {
 }
 
 type cosmosProposal struct {
-	ProposalID    string                `json:"id"`
-	Content       cosmosProposalContent `json:"content"`
-	VotingEndTime time.Time             `json:"voting_end_time"`
+	ProposalID    string                  `json:"id"`
+	Messages      []cosmosProposalMessage `json:"messages"`
+	VotingEndTime time.Time               `json:"voting_end_time"`
+}
+
+type cosmosProposalMessage struct {
+	Content cosmosProposalContent `json:"content"`
 }
 
 type cosmosProposalContent struct {
@@ -115,6 +119,9 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 	}
 	proposals := make([]Proposal, 0, len(cosmosProposals.Proposals))
 	for _, cosmosProp := range cosmosProposals.Proposals {
+		if len(cosmosProp.Messages) == 0 {
+			return nil, fmt.Errorf("prop %s messages empty - no description", cosmosProp.ProposalID)
+		}
 		log.Infof("found proposal: %s", cosmosProp.ProposalID)
 		if voted, _ := cv.HasVoted(ctx, cosmosProp.ProposalID); voted {
 			log.Infof("skip already voted proposal %s", cosmosProp.ProposalID)
@@ -134,8 +141,8 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 		voted = math.Round(voted*100) / 100
 		proposals = append(proposals, Proposal{
 			Id:          cosmosProp.ProposalID,
-			Title:       cosmosProp.Content.Title,
-			Description: cosmosProp.Content.Description,
+			Title:       cosmosProp.Messages[0].Content.Title,
+			Description: cosmosProp.Messages[0].Content.Description,
 			VotedYes:    math.Round(yes*100) / 100,
 			VotedNo:     math.Round(no*100) / 100,
 			Veto:        math.Round(veto*100) / 100,
