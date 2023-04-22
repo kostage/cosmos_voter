@@ -115,6 +115,11 @@ func (cv *CosmosVoter) GetVoting(ctx context.Context) ([]Proposal, error) {
 	}
 	proposals := make([]Proposal, 0, len(cosmosProposals.Proposals))
 	for _, cosmosProp := range cosmosProposals.Proposals {
+		log.Infof("found proposal: %s", cosmosProp.ProposalID)
+		if voted, _ := cv.HasVoted(ctx, cosmosProp.ProposalID); voted {
+			log.Infof("skip already voted proposal %s", cosmosProp.ProposalID)
+			continue
+		}
 		tally, err := cv.tally(ctx, cosmosProp.ProposalID)
 		if err != nil {
 			return nil, err

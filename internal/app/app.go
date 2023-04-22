@@ -89,11 +89,6 @@ func (app *App) ProcessCommand(ctx context.Context, update tgbotapi.Update) erro
 	}
 	foundUnvoted := false
 	for _, prop := range proposals {
-		log.Infof("found proposal: %s", prop.Id)
-		if voted, _ := app.voter.HasVoted(ctx, prop.Id); voted {
-			log.Infof("skip already voted proposal %s", prop.Id)
-			continue
-		}
 		if err := app.SendVotePrompt(prop, update.Message.Chat.ID); err != nil {
 			log.Errorf("failed to send prompt for proposal %s, err: %v", prop.Id, err)
 			return errors.Wrap(err, "failed to send vote prompt")
