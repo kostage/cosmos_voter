@@ -1,7 +1,7 @@
 {
     "proposals": [
       {
-        "proposal_id": "291",
+        "id": "291",
         "content": {
           "@type": "/cosmwasm.wasm.v1.InstantiateContractProposal",
           "title": "Deploy stOSMO-stATOM FIN Market",
@@ -51,7 +51,7 @@
         "voting_end_time": "2023-03-14T10:18:09.635152186Z"
       },
       {
-        "proposal_id": "294",
+        "id": "294",
         "content": {
           "@type": "/cosmwasm.wasm.v1.InstantiateContractProposal",
           "title": "Deploy DVPN-USK FIN Market",
@@ -101,7 +101,7 @@
         "voting_end_time": "2023-03-12T10:57:46.402865527Z"
       },
       {
-        "proposal_id": "295",
+        "id": "295",
         "content": {
           "@type": "/cosmwasm.wasm.v1.InstantiateContractProposal",
           "title": "Deploy ampWHALE-WHALE FIN Market",

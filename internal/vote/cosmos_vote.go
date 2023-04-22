@@ -29,7 +29,7 @@ type cosmosProposalsResponse struct {
 }
 
 type cosmosProposal struct {
-	ProposalID    string                `json:"proposal_id"`
+	ProposalID    string                `json:"id"`
 	Content       cosmosProposalContent `json:"content"`
 	VotingEndTime time.Time             `json:"voting_end_time"`
 }
@@ -49,10 +49,10 @@ type cosmosVotedOption struct {
 }
 
 type cosmosTallyResponse struct {
-	Yes        int `json:"yes,string"`
-	Abstain    int `json:"abstain,string"`
-	No         int `json:"no,string"`
-	NoWithVeto int `json:"no_with_veto,string"`
+	Yes        int `json:"yes_count,string"`
+	Abstain    int `json:"abstain_count,string"`
+	No         int `json:"no_count,string"`
+	NoWithVeto int `json:"no_with_veto_count,string"`
 }
 
 type cosmosNumVotesResponse struct {
